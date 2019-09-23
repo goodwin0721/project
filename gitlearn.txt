@@ -1,2 +1,2 @@
 this is a file for learning git.
-creating a new branch is quick.
+creating a new branch is quick & simple.
