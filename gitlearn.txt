@@ -1,2 +1,3 @@
 this is a file for learning git.
 creating a new branch is quick AND simple.
+add merger.
