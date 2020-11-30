@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- ∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨配置数据库∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨∨ -->
+
+	<!-- 配置Spring的内置的连接池======================== -->
+	<!--<bean id ="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		属性注入******* <property name="driverClassName" value="com.mysql.jdbc.Driver"/> 
+		<property name="url" value="jdbc:mysql://localhost:3306/test"/> <property 
+		name="username" value="root"/> <property name="password" value="123456"/> 
+		</bean> -->
+
+	<!-- 配置DBCP连接池=============================== -->
+	<!--<bean id = "dataSource" class= "org.apache.commons.dbcp.BasicDataSource"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/> <property 
+		name="url" value="jdbc:mysql://localhost:3306/test"/> <property name="username" 
+		value="root"/> <property name="password" value="123456"/> </bean> -->
+
+	<!-- 引入属性文件================================== -->
+
+	<!-- 导入资源文件 读取jdbc.properties文件中的数据 -->
+
+	<!-- 第一种方式通过一个bean标签引入的（很少） -->
+	<!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="location" value="classpath:jdbc.properties"></property> </bean> -->
+	<!-- 第二种方式通过context标签引入的 -->
+	<context:property-placeholder
+		location="classpath:jdbc.properties" />
+
+	<!-- 配置C3P0连接池************* -->
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="initialPoolSize" value="${jdbc.initPoolSize}"></property>
+		<property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+	</bean>
+
+	<!-- 配置DBCP模板=============================== -->
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- ∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧配置数据库∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧∧ -->
+
+	<!-- 定义id为userDao的Bean -->
+	<bean id="userDao"
+		class="pers.goodwin.shopSystem.dao.Impl.UserDaoImpl">
+		<!-- 将jdbcTemplate注入到userDao实例中 -->
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+
+	<bean id="goodsDao"
+		class="pers.goodwin.shopSystem.dao.Impl.GoodsDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+
+	<bean id="classifyDao"
+		class="pers.goodwin.shopSystem.dao.Impl.ClassifyDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+
+	<bean id="cartDao"
+		class="pers.goodwin.shopSystem.dao.Impl.CartDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+
+	<bean id="indentDao"
+		class="pers.goodwin.shopSystem.dao.Impl.IndentDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<bean id="pictureDao"
+		class="pers.goodwin.shopSystem.dao.Impl.PictureDaoImpl">
+	</bean>
+
+	<bean id="goodsService"
+		class="pers.goodwin.shopSystem.service.Impl.GoodsServiceImpl">
+	</bean>
+
+	<bean id="userService"
+		class="pers.goodwin.shopSystem.service.Impl.UserServiceImpl">
+	</bean>
+	
+	<bean id="shoppingService"
+		class="pers.goodwin.shopSystem.service.Impl.ShoppingServiceImpl">
+	</bean>
+	
+	<!-- 开启属性注解支持 -->
+	<context:annotation-config/>
+	
+	<!--指定注解扫描包-->
+	<!-- 	<context:component-scan base-package=""/> -->
+
+	<!-- 基于xml配置的声明式事务管理 -->
+	 <!-- 配置事务管理器，管理器需要事务，事务从Connection获得，连接从连接池DataSource获得 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!--配置事务通知-->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+	   <tx:attributes>
+	       <!--配置哪些方法使用什么样的事务,配置事务的传播特性-->
+	       <tx:method name="add" propagation="REQUIRED"/>
+	       <tx:method name="delete" propagation="REQUIRED"/>
+	       <tx:method name="update" propagation="REQUIRED"/>
+	       <tx:method name="search*" propagation="REQUIRED"/>
+	       <tx:method name="get" read-only="true"/>
+	       <tx:method name="*" propagation="REQUIRED"/>
+	   </tx:attributes>
+	</tx:advice>
+	
+	<!--配置aop织入事务-->
+	<aop:config>
+	   <aop:pointcut id="txPointcut" expression="execution(* pers.goodwin.shopSystem.service.Impl.*.*(..))"/>
+	   <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>
+
+	<!-- 基于注解的声明式事务管理 -->
+	<!-- 将事务管理器交予Spring -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+
+
+
+</beans>
