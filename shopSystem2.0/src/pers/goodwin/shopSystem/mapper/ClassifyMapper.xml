@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="pers.goodwin.shopSystem.mapper.ClassifyMapper">
+	<!-- public GoodsClassify getClassify(String classify); -->
+	<select id="getClassify" parameterType="String" resultType="GoodsClassify">
+		select * from t_goodsclassify where classify = #{classify}
+	</select>
+ 
+	<!-- public Integer getClassifyId(String classify); -->
+	<select id="getClassifyId" parameterType="String" resultType="Integer">
+		select id from t_goodsclassify where classify = #{classify}
+	</select>
+	
+	<!-- public Integer getSumByClassify(String classify);//获得该分类下的商品总数 -->
+	<select id="getSumByClassify" parameterType="String" resultType="Integer">
+		select sum from t_goodsclassify where classify = #{classify}
+	</select>
+	
+	<!-- public void increaseSumById(@Param("classifyId") Integer classifyId,@Param("sum") Integer sum);//增加商品总数 -->
+ 	<update id="increaseSumById">
+ 		UPDATE t_goodsclassify set sum = sum + #{sum} WHERE id = #{classifyId}
+ 	</update>
+ 	
+ 	<!-- public void increaseSum(@Param("classify") String classify,@Param("sum") Integer sum); -->
+ 	<update id="increaseSum">
+ 		UPDATE t_goodsclassify set sum = sum + #{sum} WHERE classify = #{classify}
+ 	</update>
+ </mapper>

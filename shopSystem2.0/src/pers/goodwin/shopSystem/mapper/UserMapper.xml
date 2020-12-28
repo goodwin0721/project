@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="pers.goodwin.shopSystem.mapper.UserMapper">
+ 	<!-- 
+	public User getUserByPassword(User user);//获得用户实例
+	public void addUser(User user);//增加用户
+	public void addManager(Integer userId);//增加管理员
+	public Integer isManager(User user);//判断用户是否是管理员       -->
+ 	
+ 	<select id="getUserByPassword" parameterType="user" resultType="user">
+ 		select * from t_user where username = #{username} and password = #{password}
+ 	</select>
+ 	
+ 	<insert id="addUser" parameterType="user">
+ 		insert into t_user(username,password,birthdate,gender) 
+ 		value(#{username},#{password},#{birthdate},#{gender})
+ 	</insert>
+ 	
+ 	<insert id="addManager" parameterType="Integer">
+ 		insert into t_manager(userId) value(#{userId})
+ 	</insert>
+ 	
+ 	<select id="isManager" parameterType="user" resultType="Integer">
+ 		SELECT COUNT(*) 
+ 		FROM `t_manager` 
+ 		GROUP BY userId 
+ 		HAVING userId = #{id};
+ 	</select>
+ 	
+ </mapper>

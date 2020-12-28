@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="pers.goodwin.shopSystem.mapper.GoodsMapper">
+	<!-- public void addGoods(Goods goods); -->
+	<insert id="addGoods" parameterType="goods">
+		insert into t_goods(id,name,described,price,stock,pictureUrl,sold) 
+		value(#{id},#{name},#{described},#{price},#{stock},#{pictureUrl},0)
+	</insert>
+	
+	<!-- public Goods getGoods(Integer goodsId); -->
+	<select id="getGoods" parameterType="Integer" resultType="goods">
+		select * from t_goods WHERE id = #{id}
+	</select>
+	
+	<!-- public void addGoodsStockById(Integer goodsId,Integer sum); -->
+	<update id="addGoodsStockById">
+		UPDATE t_goods set stock = stock + #{sum} WHERE id = #{goodsId}
+	</update>
+	
+	<!-- public void subGoodsStockById(@Param("goodsId")Integer goodsId,@Param("sum")Integer sum); -->
+	<update id="subGoodsStockById">
+		UPDATE t_goods set stock = stock - #{sum} WHERE id = #{goodsId}
+	</update>
+	
+	<!-- public void addGoodsSoldById(Integer goodsId,Integer sum); -->
+	<update id="addGoodsSoldById">
+		UPDATE t_goods set sold = sold + #{sum} WHERE id = #{goodsId}
+	</update>
+	
+	<!-- public List<Goods> getGoodsByClassifyId(Integer classifyId); -->
+	<select id="getGoodsByClassifyId" parameterType="Integer" resultType="goods">
+		select * from t_goods 
+		where id like '${value}%'
+	</select>
+	
+	<!-- public List<Goods> getGoodsByKeyword(String keyword); -->
+	<select id="getGoodsByKeyword" parameterType="String" resultType="goods">
+		select * from t_goods 
+		where stock > 0 and name like '%${value}%' or described like '%${value}%'
+	</select>
+	
+	<!-- public List<Goods> getAllGoods(); -->
+	<select id="getAllGoods" resultType="goods">
+		select * from t_goods
+	</select>
+	
+	<!-- public List<Goods> getHotSale(Integer count);//查询热卖前count个商品 -->
+	<select id="getHotSale" parameterType="Integer" resultType="goods">
+		select * from t_goods ORDER BY sold desc,stock desc LIMIT #{count}
+	</select>
+	 
+ </mapper>

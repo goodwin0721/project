@@ -1,0 +1,108 @@
+body{
+	background-color:#DDFFFF;
+}
+
+#addGoods{
+	width:60%;
+	height:auto;
+	margin:0 20%;
+	font-family: sans-serif;
+	color:#000000;
+}
+
+#addGoods form {
+	width: 600px;
+	height:auto;
+	background: #ccc;
+	margin: 0 auto;
+	padding: 20px;
+	border: 1px solid black;
+}
+
+#addGoods form div ol {
+	padding-left: 0;
+}
+
+#addGoods form div li, div > p {
+	background: #eee;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	list-style-type: none;
+	border: 1px solid black;
+}
+
+#addGoods form img {
+	height: 64px;
+	order: 1;
+}
+
+#addGoods form p {
+	line-height: 32px;
+	padding-left: 10px;
+}
+
+#addGoods form label,#addGoods form button {
+	background-color: #7F9CCB;
+	padding: 5px 10px;
+	border-radius: 5px;
+	border: 1px ridge black;
+	font-size: 0.8rem;
+	height: auto;
+}
+
+#addGoods form label:hover,#addGoods form button:hover {
+	background-color: #2D5BA3;
+	color: white;
+}
+
+#addGoods form label:active,#addGoods form button:active {
+	background-color: #0D3F8F;
+	color: white;
+}
+
+.key{
+	display:block;
+	width:20%;
+	margin:10px 0;
+}
+.value{
+	display:block;
+	width:80%;
+	margin:10px 10%;
+}
+#chooseImg{
+	width:20%;
+	margin-left:10%;
+}
+
+#add{
+	width:20%;
+	margin-left:70%;
+}
+
+#image_uploads{
+	opacity:0;
+}
+#preview{
+	width:80%;
+	min-height:10px;
+	margin:10px 10%;
+}
+
+#addGoodsBtn{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

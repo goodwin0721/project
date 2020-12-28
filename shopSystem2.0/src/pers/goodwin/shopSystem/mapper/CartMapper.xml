@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="pers.goodwin.shopSystem.mapper.CartMapper">
+	<!-- public void addGoodsToCart(@Param("userId") Integer userId,
+	 @Param("goodsId") Integer goodsId,@Param("amount") Integer amount); -->
+ 	<insert id="addGoodsToCart">
+ 		INSERT into t_cart(userId,goodsId,amount) 
+ 		value(#{userId},#{goodsId},#{amount})
+ 	</insert>
+ 	
+ 	<!-- public Cart getCart(@Param("userId") Integer userId, @Param("goodsId") Integer goodsId); -->
+ 	<select id="getCart" resultType="cart">
+ 		select * from t_cart WHERE userId = #{userId} and goodsId = #{goodsId};
+ 	</select>
+ 	
+	<!-- public void updateGoodsAmount(@Param("userId") Integer userId,
+	 @Param("goodsId") Integer goodsId,@Param("amount") Integer amount); -->
+ 	<update id="updateGoodsAmount">
+ 		UPDATE t_cart set amount = #{amount} 
+ 		WHERE userId = #{userId} and goodsId = #{goodsId}
+ 	</update>
+ 	
+ 	<!-- public void removeGoodsFromCart(@Param("userId") Integer userId,
+ 	 @Param("goodsId") Integer goodsId); -->
+ 	<delete id="removeGoodsFromCart">
+ 		DELETE FROM t_cart WHERE userId = #{userId} and goodsId = #{goodsId}
+ 	</delete>
+ 	
+ 	<!-- public void removeAllGoodsByUserId(Integer userId); -->
+ 	 <delete id="removeAllGoodsByUserId" parameterType="Integer">
+ 	 	DELETE FROM t_cart WHERE userId = #{userId}
+ 	 </delete>
+ 	 
+ 	 <!-- public List<Cart> searchByUserId(Integer userId); -->
+ 	 <select id="searchByUserId" parameterType="Integer" resultType="cart">
+ 	 	select * from t_cart WHERE userId = #{userId};
+ 	 </select>
+ </mapper>
