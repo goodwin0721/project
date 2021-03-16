@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 扫描service相关的bean -->
+    <context:component-scan base-package="pers.goodwin.shopSystem.service.impl"/>
+
+    <!-- service注入到IOC容器中 -->
+    <bean id="userService" class="pers.goodwin.shopSystem.service.impl.UserServiceImpl">
+        <property name="userMapper" ref="userMapper"/>
+    </bean>
+    <bean id="pictureUtil" class="pers.goodwin.shopSystem.utils.PictureUtil"/>
+    <bean id="goodsService" class="pers.goodwin.shopSystem.service.impl.GoodsServiceImpl">
+        <property name="goodsMapper" ref="goodsMapper"/>
+        <property name="classifyMapper" ref="classifyMapper"/>
+        <property name="pictureUtil" ref="pictureUtil"/>
+    </bean>
+    <bean id="shoppingService" class="pers.goodwin.shopSystem.service.impl.ShoppingServiceImpl">
+        <property name="goodsMapper" ref="goodsMapper"/>
+        <property name="cartMapper" ref="cartMapper"/>
+        <property name="indentMapper" ref="indentMapper"/>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置基于注解的声明式事务,默认使用注解来管理事务行为-->
+    <!--    <tx:annotation-driven transaction-manager="transactionManager"/>-->
+
+    <!-- 配置事务通知 -->
+    <tx:advice id="transactionInterceptor" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置aop织入事务 -->
+    <aop:config>
+        <aop:pointcut id="txPointcut" expression="execution(* pers.goodwin.shopSystem.service.impl.*Impl.*(..))"/>
+        <aop:advisor advice-ref="transactionInterceptor" pointcut-ref="txPointcut"/>
+    </aop:config>
+</beans>

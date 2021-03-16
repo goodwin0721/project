@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="pers.goodwin.shopSystem.mapper.IndentMapper">
+ 	<!-- public void addGoodsToIndent(Indent indent); -->
+ 	<insert id="addGoodsToIndent" parameterType="Indent">
+ 		INSERT into t_indent(userId,goodsId,price,amount,tradeTime) 
+ 		value(#{userId},#{goodsId},#{price},#{amount},#{tradeTime})
+ 	</insert>
+ 	
+ 	<!-- public void addGoodsToIndent(@Param("userId") Integer userId, @Param("goodsId") Integer goodsId,
+		@Param("price") Integer price, @Param("amount") Integer amount, @Param("tradeTime") String tradeTime); -->
+	<!--
+	<insert id="addGoodsToIndent">
+		INSERT into t_indent(userId,goodsId,price,amount,tradeTime) 
+ 		value(#{userId},#{goodsId},#{price},#{amount},#{tradeTime})
+	</insert> -->
+	
+	<!-- public List<Indent> searchByUserId(Integer userId); -->
+	<select id="searchByUserId" parameterType="Integer" resultType="Indent">
+		select * from t_indent WHERE userId = #{userId}
+	</select>
+ </mapper>

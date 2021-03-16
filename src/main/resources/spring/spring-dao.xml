@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+	   http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 配置整合mybatis -->
+    <!-- 1.关联数据库文件 -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!-- 2.数据库连接 -->
+    <!-- 数据库连接池：
+    dbcp	 半自动化操作	不能自动连接
+    c3p0	自动化操作	自动加载配置文件，并且设置到对象里 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+    </bean>
+
+    <!-- 3.配置sqlSessionFactory对象 -->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 配置数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 配置mybatis全局配置文件：sqlMapConfig.xml -->
+        <property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+    </bean>
+
+<!--    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">-->
+<!--        <constructor-arg name="sqlSessionFactory" ref="sessionFactory" />-->
+<!--    </bean>-->
+
+    <!-- 4.配置扫描Dao接口包，动态实现Dao接口注入到spring容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 给出需要扫描Dao接口包 -->
+        <property name="basePackage" value="pers.goodwin.shopSystem.mapper"/>
+        <!-- 注入sqlSessionFactory -->
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
+    </bean>
+</beans>
